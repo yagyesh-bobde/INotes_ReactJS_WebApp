@@ -7,7 +7,7 @@ const auth = require('./routes/auth')
 
 connectToMongo();
 const app = express()
-const port = 3000
+const port = 5000
 
 app.use(express.json()) // this is the middleware which enables us to send json as response
 
