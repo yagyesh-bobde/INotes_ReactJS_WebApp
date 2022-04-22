@@ -3,15 +3,20 @@ const User = require('../models/User')
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
-
+const fetchuser = require('../middleware/fetchuser')
 
 const router = express.Router()
-const JWT_SECRET = "Yagyeshis the best person in the world"
+
+// Never harcode this type of variables
+const JWT_SECRET = "Yagyesh is the best person in the world"
+
+
+// ROUTE 1 : For Creating user 
 router.post('/createuser',[
     body('name', 'Enter a Valid Name').isLength({ min: 3}),
     body('email' , 'Enter a Valid mail-id').isEmail(),
     body('password', 'Password must have atleast 5 characters').isLength({min:5})
-],async (req,res)=> {
+], async (req,res)=> {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -51,5 +56,58 @@ router.post('/createuser',[
             res.status(500).send('Some error occured')
         }
 })
+
+
+// ROUTE3 : Create a login endpoint
+router.post('/loginuser',[
+    body('email' , 'Enter a Valid mail-id').isEmail(),
+    body('password', 'Password must have atleast 5 characters').exists()
+],async (req,res)=> {
+    const errors = validationResult(req);
+   
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+        }
+
+        const {email , password } = req.body
+    
+        try {
+        const user = await User.findOne({email: email})
+        if (!user) {
+            console.log("Error: Email not present in the database")
+            return res.status(400).json({error : 'Incorrect credentials'})
+        }
+        const passwordCompare = await bcrypt.compare(password , user.password)
+        if (!passwordCompare){
+            console.log("Password not correct")
+            return res.status(400).json({error : 'Incorrect credentials'})
+        }
+        const payload = {
+            user: {
+                id:user.id
+            }
+        }
+        
+    const authToken = jwt.sign(payload, JWT_SECRET)
+    res.json({authToken})
+
+    } catch (error) {
+        return res.status(500).send("Internal Server Error")
+    }
+})
+
+
+// ROUTE 3: Get Logged it user details
+router.post('/getuser',fetchuser,async (req,res)=> {
+try {
+   const  userID = req.user.id
+   const user = await User.findById(userID).select("-password")
+   res.send(user)
+} catch (error) {
+    res.status(500)
+}
+
+})
+
 
 module.exports = router
