@@ -64,9 +64,10 @@ router.post('/loginuser',[
     body('password', 'Password must have atleast 5 characters').exists()
 ],async (req,res)=> {
     const errors = validationResult(req);
-   
+    let success = false
+    
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() , success:success });
         }
 
         const {email , password } = req.body
@@ -75,12 +76,12 @@ router.post('/loginuser',[
         const user = await User.findOne({email: email})
         if (!user) {
             console.log("Error: Email not present in the database")
-            return res.status(400).json({error : 'Incorrect credentials'})
+            return res.status(400).json({ error: 'Incorrect credentials', success: success})
         }
         const passwordCompare = await bcrypt.compare(password , user.password)
         if (!passwordCompare){
             console.log("Password not correct")
-            return res.status(400).json({error : 'Incorrect credentials'})
+            return res.status(400).json({ error: 'Incorrect credentials', success: success})
         }
         const payload = {
             user: {
@@ -89,10 +90,11 @@ router.post('/loginuser',[
         }
         
     const authToken = jwt.sign(payload, JWT_SECRET)
-    res.json({authToken})
+    success = true;
+    res.json({success,authToken})
 
     } catch (error) {
-        return res.status(500).send("Internal Server Error")
+            return res.status(500).send({ error: "Internal Server Error", success: success})
     }
 })
 
