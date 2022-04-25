@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import About from "./components/About";
 import Home from "./components/Home";
 import NoteState from "./context/notes/NoteState"
+import Alert from './components/Alert';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <NoteState>
           <Router>
             <Navbar />
+            <Alert message="This is INotebook"/>
             <div className="container">
             <Routes>
               <Route exact path="/" element={<Home />} />

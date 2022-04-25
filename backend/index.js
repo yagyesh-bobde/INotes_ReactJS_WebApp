@@ -1,5 +1,7 @@
 const connectToMongo = require('./db')
+var cors = require('cors')
 const express = require('express')
+
 
 // route pages
 const notes = require('./routes/notes')
@@ -15,6 +17,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
+app.use(cors())
 //  Available routes
 app.use('/api/notes',notes)
 app.use('/api/auth',auth)
