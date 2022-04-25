@@ -32,7 +32,7 @@ const AddNote = () => {
                   <label htmlFor="Description" className="form-label">Tag</label>
                   <input type="text" className="form-control" id="tag" onChange={onChange} name="tag"/>
               </div>
-              <button type="submit" className="btn btn-primary" onClick={handleClick}>Add Note</button>
+              <button disabled={note.title.length <5 || note.description.length < 5} type="submit" className="btn btn-primary" onClick={handleClick}>Add Note</button>
           </form>
       </div>
   )

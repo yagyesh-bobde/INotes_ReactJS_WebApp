@@ -36,14 +36,7 @@ const NoteState = (props) => {
             body: JSON.stringify({ title, description, tag }) // body data type must match "Content-Type" header
         });
         const json = await response.json()
-        const note = {
-            title : title ,
-            description: description,
-            tag: tag
-        }
-        console.log(json)
-
-        setNotes(notes.concat(note))
+        setNotes(notes.concat(json))
     }
 
 // Delete Note Function
@@ -74,15 +67,18 @@ const NoteState = (props) => {
         });
         const json= await response.json()
         
+        // New notes 
+        const newNotes = notes // JSON.parse(JSON.stringify(notes))
         // Login
-        for (let index = 0; index < notes.length; index++) {
-            const element = notes[index];
+        for (let index = 0; index < newNotes.length; index++) {
+            const element = newNotes[index];
             if (element._id === id){
-                element.title = title 
-                element.description = description
-                element.tag = tag
+                newNotes[index].title = title 
+                newNotes[index].description = description
+                newNotes[index].tag = tag
+                break;
             }
-         
+         setNotes(newNotes)
 }};
  
 
