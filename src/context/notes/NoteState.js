@@ -10,17 +10,22 @@ const NoteState = (props) => {
 
 
     // GET THE DATA
-    const getData = async (id, title, description, tag) => {
+    const getData = async () => {
         // API CALL 
+        const token = localStorage.getItem('token')
         const response = await fetch(`${url}/api/notes/fetchallnotes`, {
             method: 'GET', // *GET, POST, PUT, DELETE, etc.
             headers: {
-                'Content-Type': 'application/json',
-                'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2MmM4MjJkZmY4NWRhM2M2Y2ZiNTlkIn0sImlhdCI6MTY1MDY0MDk3N30.P5GgnxwP13JIrI1Bb6ufUyJw9cgRbvwxJaic1kEruPo'
-            },
+                'auth-token': token
+            }
         });
         const json = await response.json();
-        setNotes(json)
+        if (json){
+            setNotes(json)
+        }
+        else{
+            setNotes([])
+        }
     }
   
     
@@ -31,8 +36,7 @@ const NoteState = (props) => {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             headers: {
                 'Content-Type': 'application/json',
-                'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2MmM4MjJkZmY4NWRhM2M2Y2ZiNTlkIn0sImlhdCI6MTY1MDY0MDk3N30.P5GgnxwP13JIrI1Bb6ufUyJw9cgRbvwxJaic1kEruPo'
-            },
+                'auth-token': localStorage.getItem('token')            },
             body: JSON.stringify({ title, description, tag }) // body data type must match "Content-Type" header
         });
         const json = await response.json()
@@ -46,8 +50,7 @@ const NoteState = (props) => {
             method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
             headers: {
                 'Content-Type': 'application/json',
-                'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2MmM4MjJkZmY4NWRhM2M2Y2ZiNTlkIn0sImlhdCI6MTY1MDY0MDk3N30.P5GgnxwP13JIrI1Bb6ufUyJw9cgRbvwxJaic1kEruPo'
-            },
+                'auth-token': localStorage.getItem('token')            },
         });
         console.log(response.json())
         // Logic
@@ -61,10 +64,10 @@ const NoteState = (props) => {
             method: 'PUT', // *GET, POST, PUT, DELETE, etc.
             headers: {
                 'Content-Type': 'application/json',
-                'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2MmM4MjJkZmY4NWRhM2M2Y2ZiNTlkIn0sImlhdCI6MTY1MDY0MDk3N30.P5GgnxwP13JIrI1Bb6ufUyJw9cgRbvwxJaic1kEruPo'
-            },
+                'auth-token': localStorage.getItem('token')            },
             body: JSON.stringify({title , description , tag}) // body data type must match "Content-Type" header
         });
+        // eslint-disable-next-line
         const json= await response.json()
         
         // New notes 

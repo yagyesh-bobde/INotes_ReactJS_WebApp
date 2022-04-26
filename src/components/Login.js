@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 const Login = (props) => {
     const url = 'http://localhost:5000'
+
     const [credentials , setCredentials] = useState({ email: '', password: '' })
     let navigate = useNavigate()
 
@@ -20,14 +21,13 @@ const Login = (props) => {
             body: JSON.stringify({email: credentials.email , password: credentials.password }) // body data type must match "Content-Type" header
         });
         const json = await response.json()
-        
         // Check if success 
         if (json.success){
             // Store token
-            localStorage.setItem('Item' , json.authtoken)
+            localStorage.setItem('token' , json.authToken)
             // Redirect
-            navigate('/')
             props.showAlert("Login Successful" , 'success')
+            navigate('/')
         }else{
             setCredentials({ email: '', password: '' })
             props.showAlert("Login Failed", 'danger')
@@ -36,6 +36,9 @@ const Login = (props) => {
 
   return (
     <div>
+        <div className="container text-center">
+            <h2>LogIn To Continue to iNotebook</h2>
+        </div>
           <form onSubmit={handleClick}>
               <div className="mb-3">
                   <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>

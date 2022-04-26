@@ -29,7 +29,7 @@ const Signup = (props) => {
     // Check if success 
     if (json.success) {
       // Store token
-      localStorage.setItem('Item', json.authtoken)
+      localStorage.setItem('token', json.authToken)
       props.showAlert("Sign Up Successful", 'success')
       // Redirect
       navigate('/')
@@ -41,6 +41,9 @@ const Signup = (props) => {
 
   return (
     <div>
+      <div className="container text-center">
+        <h2>SignUp To Continue to iNotebook</h2>
+      </div>
       <form onSubmit={handleClick}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">Name</label>
