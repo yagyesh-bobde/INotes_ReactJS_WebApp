@@ -3,7 +3,7 @@ import React, { useContext,useEffect,useRef, useState } from 'react'
 import noteContext from '../context/notes/noteContext'
 import AddNote from "./AddNote";
 
-export default function Notes() {
+export default function Notes(props) {
     // Using the notes context
     const context = useContext(noteContext);
     // Destructuring the notes context
@@ -27,12 +27,14 @@ export default function Notes() {
         e.preventDefault()
         editNote(note.id , note.title, note.description, note.tag)
         refClose.current.click()
+        props.showAlert("Updated The Note Successfullly", 'success')
     } 
 
 
     const updateNote = (Mainnote) => {
         refModal.current.click()
         setNote({id:Mainnote._id , title : Mainnote.title , description: Mainnote.description, tag: Mainnote.tag })
+        
     }
 
 // Refs 
@@ -41,7 +43,7 @@ export default function Notes() {
 
   return (
       <>      {/* FORUM TO CREATE A NEW NOTE */}
-      <AddNote/>
+      <AddNote showAlert={props.showAlert} />
 
       {/* <!-- Button trigger modal --> */}
           <div>
@@ -89,7 +91,7 @@ export default function Notes() {
       <div className="row container my-4">
           <h2>Your Notes</h2>
           {notes.map((note) => {
-              return <NoteItem note={note} key={note._id} updateNote={updateNote} />
+              return <NoteItem note={note} key={note._id} updateNote={updateNote} showAlert={props.showAlert} />
           })}
       </div>
       </>
